@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context="ua.inmart.heltech.osm.MainActivity">
+
+    <org.osmdroid.views.MapView android:id="@+id/map"
+        android:layout_width="800dp"
+        android:layout_height="fill_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_toRightOf="@+id/relativeLayout"
+        android:layout_toEndOf="@+id/relativeLayout" />
+
+    <RelativeLayout
+        android:layout_width="230dp"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:background="@drawable/menu"
+        android:id="@+id/relativeLayout">
+
+        <Button
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="MY LOCATION"
+            android:id="@+id/myLocation"
+            android:layout_below="@+id/textView4"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="15dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Lat:"
+            android:id="@+id/textView2"
+            android:textSize="15dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignRight="@+id/textView3"
+            android:layout_alignEnd="@+id/textView3" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Lon:"
+            android:id="@+id/textView3"
+            android:textSize="15dp"
+            android:layout_alignBaseline="@+id/lon"
+            android:layout_alignBottom="@+id/lon"
+            android:layout_alignRight="@+id/textView4"
+            android:layout_alignEnd="@+id/textView4" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Deg:"
+            android:id="@+id/textView4"
+            android:textSize="15dp"
+            android:layout_below="@+id/textView3"
+            android:layout_alignLeft="@+id/myLocation"
+            android:layout_alignStart="@+id/myLocation" />
+
+        <TextView
+            android:layout_width="90dp"
+            android:layout_height="20dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Large Text"
+            android:id="@+id/lat"
+            android:textSize="15dp"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/textView3"
+            android:layout_toEndOf="@+id/textView3"
+            android:layout_marginLeft="26dp"
+            android:layout_marginStart="26dp" />
+
+        <TextView
+            android:layout_width="90dp"
+            android:layout_height="20dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Large Text"
+            android:id="@+id/lon"
+            android:layout_below="@+id/lat"
+            android:layout_alignLeft="@+id/lat"
+            android:layout_alignStart="@+id/lat"
+            android:textSize="15dp" />
+
+        <TextView
+            android:layout_width="90dp"
+            android:layout_height="20dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:text="Large Text"
+            android:id="@+id/deg"
+            android:textSize="15dp"
+            android:layout_below="@+id/lon"
+            android:layout_alignLeft="@+id/lon"
+            android:layout_alignStart="@+id/lon" />
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TASK1"
+            android:id="@+id/task"
+            android:layout_alignLeft="@+id/textView3"
+            android:layout_alignStart="@+id/textView3"
+            android:layout_alignRight="@+id/myLocation"
+            android:layout_alignEnd="@+id/myLocation"
+            android:layout_marginTop="15dp"
+            android:layout_below="@+id/myLocation" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TASK2"
+            android:id="@+id/task2"
+            android:layout_alignLeft="@+id/textView3"
+            android:layout_alignStart="@+id/textView3"
+            android:layout_alignRight="@+id/task"
+            android:layout_alignEnd="@+id/task"
+            android:layout_marginTop="15dp"
+            android:layout_below="@+id/task" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="TASK3"
+            android:id="@+id/task3"
+            android:layout_alignLeft="@+id/textView3"
+            android:layout_alignStart="@+id/textView3"
+            android:layout_alignRight="@+id/task2"
+            android:layout_alignEnd="@+id/task2"
+            android:layout_marginTop="15dp"
+            android:layout_below="@+id/task2" />
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="DELETE ALL"
+            android:id="@+id/delete"
+            android:layout_alignLeft="@+id/textView3"
+            android:layout_alignStart="@+id/textView3"
+            android:layout_alignRight="@+id/task3"
+            android:layout_alignEnd="@+id/task3"
+            android:layout_marginTop="15dp"
+            android:layout_below="@+id/task3" />
+    </RelativeLayout>
+
+
+</RelativeLayout>
