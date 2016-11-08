@@ -1,97 +1,81 @@
 package ua.inmart.heltech.osm;
 
-import android.os.AsyncTask;
+import android.app.NotificationManager;
+import android.content.Context;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
-
-import org.json.JSONException;
-import org.json.JSONObject;
+import android.widget.ListView;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
 import org.osmdroid.views.overlay.OverlayItem;
-
-import java.io.BufferedInputStream;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
-public class LANavigatorStartActivity extends AppCompatActivity implements View.OnClickListener {
+public class LANavigatorStartActivity extends AppCompatActivity implements View.OnClickListener , SwipeRefreshLayout.OnRefreshListener{
     private static final String TAG = "Main Activity";
     MapView mapView;
-    LAPositionThread theardPosition;
+    LAPositionThread threadPosition;
     ArrayList<OverlayItem> anotherOverlayItemArray;
     ItemizedIconOverlay<OverlayItem> anotherItemizedIconOverlay;
     Button myLoc;
-
+    SwipeRefreshLayout mSwipeRefreshLayout;
     ArrayList<GeoPoint> Tasks;
+    ListView listView ;
+    LAListAdapter adapter;
+    List<LAListItemObject> list;
+    int f = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lanavigator_start);
-        theardPosition = new LAPositionThread(this);
-
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.activity_main_swipe_refresh_layout);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        threadPosition = new LAPositionThread(this);
         initMap();
-
         anotherOverlayItemArray = new ArrayList<OverlayItem>();
-
-
         myLoc = (Button) findViewById(R.id.myLoc);
         myLoc.setOnClickListener(this);
-
-    }
-
-    private void initTasks (){
-
+        listView = (ListView) findViewById(R.id.listView);
+        list = new ArrayList();
     }
 
 
-    private class GetTasks extends AsyncTask<String,Void,Boolean> {
-        @Override
-        protected Boolean doInBackground(String... params) {
-            try
-            {
-                String u = params[0];
-                URL url = new URL(u);
-                HttpURLConnection urlConnection = (HttpURLConnection) url.openConnection();
-                InputStream in = new BufferedInputStream(urlConnection.getInputStream());
-                JSONObject response = readStream(in);
-                Log.i(TAG, "doInBackground: " + response.toString());
-                urlConnection.disconnect();
-            }
-            catch(Exception e){
-                Log.i(TAG, "doInBackground: false " + e.toString());
-            }
-            return null;
-        }
-        @Override
-        protected void onPostExecute(Boolean aBoolean) {
+    //  createNotification(56, R.drawable.ic_launcher, "New Message",
+//      "There is a new message from Bob!");
 
-        }
+
+    private List<LAListItemObject> initTaskList() {
+        Random generator = new Random();
+        int i = generator.nextInt(3) + 1;
+        Log.i(TAG, "initTaskList: "+ i );
+
+
+        list.add( new LAListItemObject("Task Name", "Task description. " + f, "10:56 ", threadPosition.lat, threadPosition.lon, i  ));
+        return list;
     }
+
 
     public void setMyLocation() {
-        System.out.println("Location is :" + theardPosition.lat + " " + theardPosition.lon);
+        System.out.println("Location is :" + threadPosition.lat + " " + threadPosition.lon);
         deleteAllOverlays();
         mapView.getOverlays().clear();
         mapView.getController().setZoom(18);
-        GeoPoint position = new GeoPoint(theardPosition.lat, theardPosition.lon);
+        GeoPoint position = new GeoPoint(threadPosition.lat, threadPosition.lon);
         mapView.getController().animateTo(position);
-        anotherOverlayItemArray.add(new OverlayItem("My position", "asdd", position));
+        anotherOverlayItemArray.add(new OverlayItem("My position", "", position));
         anotherItemizedIconOverlay = new ItemizedIconOverlay<OverlayItem>(this, anotherOverlayItemArray, null);
         mapView.getOverlays().add(anotherItemizedIconOverlay);
         Log.i(TAG, "onClick: SIZE " + anotherOverlayItemArray.size());
     }
-
     private void initMap() {
         mapView = (MapView)findViewById(R.id.map); //constructor
         mapView.setClickable(true);
@@ -117,27 +101,21 @@ public class LANavigatorStartActivity extends AppCompatActivity implements View.
         }
     }
 
-    private JSONObject readStream(InputStream in) {
-        BufferedReader streamReader = null;
-        JSONObject res = null;
-        try {
-            streamReader = new BufferedReader(new InputStreamReader(in, "UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+    @Override
+    public void onRefresh() {
+        Log.i(TAG, "onRefresh: ");
+        if (f == 0 ){
+            adapter = new LAListAdapter(getBaseContext(),  initTaskList());
+            listView.setAdapter(adapter);
+            Log.i(TAG, "onRefresh: 1");
+        }else{
+            initTaskList();
+            Log.i(TAG, "onRefresh: 0");
+
         }
-        StringBuilder responseStrBuilder = new StringBuilder();
-        String inputStr;
-        try {
-            while ((inputStr = streamReader.readLine()) != null)
-                responseStrBuilder.append(inputStr);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            res = new JSONObject(responseStrBuilder.toString());
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        return res;
+        f++;
+        adapter.notifyDataSetChanged();
+        listView.refreshDrawableState();
+        mSwipeRefreshLayout.setRefreshing(false);
     }
 }

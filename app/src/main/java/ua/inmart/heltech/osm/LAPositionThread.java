@@ -1,6 +1,7 @@
 package ua.inmart.heltech.osm;
 
 import android.Manifest;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.location.Location;
@@ -8,6 +9,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
+import android.support.v7.app.NotificationCompat;
 import android.util.Log;
 
 /**
@@ -21,11 +23,12 @@ public class LAPositionThread extends Thread{
     double lat;
     double lon;
     int i = 0 ;
-    public LAPositionThread(Context ctx) {
+    Context ctx;
+    public LAPositionThread(Context context) {
         // Создаём новый второй поток
         super("LAPositionThread");
         System.out.println("Создан LAPositionThread  " + this);
-
+        ctx = context;
         locationManager = (LocationManager) ctx.getSystemService(ctx.LOCATION_SERVICE);
         listener = new LocationListener() {
             @Override
@@ -72,12 +75,27 @@ public class LAPositionThread extends Thread{
                 i++;
                 System.out.println("LAPositionThread Position :" + i + " " + lat + " " + lon);
                 Thread.sleep(1000);
+                if (i == 10 ){
+                    createNotification(50, R.drawable.mypos, "New Message", "There is a new task from Petrovich", ctx);
+                }
             }
         } catch (InterruptedException e) {
             System.out.println("LAPositionThread  прерван");
         }
         System.out.println("LAPositionThread  завершён");
     }
+    private void createNotification(int nId, int iconRes, String title, String body ,  Context ctx) {
+        NotificationCompat.Builder mBuilder = (NotificationCompat.Builder) new NotificationCompat.Builder(
+                ctx).setSmallIcon(iconRes)
+                .setContentTitle(title)
+                .setContentText(body);
+
+        NotificationManager mNotificationManager =
+                (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
+        // mId allows you to update the notification later on.
+        mNotificationManager.notify(nId, mBuilder.build());
+    }
+
 }
 //        theardPosition.lat
 //        theardPosition.lon
