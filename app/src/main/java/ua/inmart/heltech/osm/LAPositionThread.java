@@ -73,8 +73,8 @@ public class LAPositionThread extends Thread{
         try {
             while(true){
                 i++;
-                System.out.println("LAPositionThread Position :" + i + " " + lat + " " + lon);
-                Thread.sleep(1000);
+//                System.out.println("LAPositionThread Position :" + i + " " + lat + " " + lon);
+                Thread.sleep(3000);
                 if (i == 10 ){
                     createNotification(50, R.drawable.mypos, "New Message", "There is a new task from Petrovich", ctx);
                 }
@@ -89,25 +89,8 @@ public class LAPositionThread extends Thread{
                 ctx).setSmallIcon(iconRes)
                 .setContentTitle(title)
                 .setContentText(body);
-
         NotificationManager mNotificationManager =
                 (NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE);
-        // mId allows you to update the notification later on.
         mNotificationManager.notify(nId, mBuilder.build());
     }
-
 }
-//        theardPosition.lat
-//        theardPosition.lon
-
-//        new Timer().schedule(new TimerTask() {
-//            @Override
-//            public void run() {
-//                runOnUiThread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//
-//                    }
-//                });
-//            }
-//        }, 5000);

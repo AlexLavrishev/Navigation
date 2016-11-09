@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+
+import org.json.JSONArray;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.ItemizedIconOverlay;
@@ -22,6 +24,7 @@ public class LANavigatorStartActivity extends AppCompatActivity implements View.
     private static final String TAG = "Main Activity";
     MapView mapView;
     LAPositionThread threadPosition;
+    LATaskThread threadTask;
     ArrayList<OverlayItem> anotherOverlayItemArray;
     ItemizedIconOverlay<OverlayItem> anotherItemizedIconOverlay;
     Button myLoc;
@@ -40,12 +43,14 @@ public class LANavigatorStartActivity extends AppCompatActivity implements View.
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.activity_main_swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(this);
         threadPosition = new LAPositionThread(this);
+        threadTask = new LATaskThread(this);
         initMap();
         anotherOverlayItemArray = new ArrayList<OverlayItem>();
         myLoc = (Button) findViewById(R.id.myLoc);
         myLoc.setOnClickListener(this);
         listView = (ListView) findViewById(R.id.listView);
         list = new ArrayList();
+
     }
 
 
@@ -56,10 +61,10 @@ public class LANavigatorStartActivity extends AppCompatActivity implements View.
     private List<LAListItemObject> initTaskList() {
         Random generator = new Random();
         int i = generator.nextInt(3) + 1;
-        Log.i(TAG, "initTaskList: "+ i );
+        Log.i(TAG, "initTaskList: " + i);
 
 
-        list.add( new LAListItemObject("Task Name", "Task description. " + f, "10:56 ", threadPosition.lat, threadPosition.lon, i  ));
+        list.add(new LAListItemObject("Task Name", "Task description. " + f, "10:56 ", threadPosition.lat, threadPosition.lon, i));
         return list;
     }
 
@@ -96,7 +101,15 @@ public class LANavigatorStartActivity extends AppCompatActivity implements View.
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.myLoc:
-                setMyLocation();
+//                setMyLocation();
+                JSONArray taskJsonArr = threadTask.taskJsonArr;
+
+                if (taskJsonArr == null){
+                    Log.i(TAG, "onClick: Tasks is empty");
+                }else{
+                    Log.i(TAG, "onClick: Tasks is not empty");
+                }
+
                 break;
         }
     }
@@ -118,4 +131,6 @@ public class LANavigatorStartActivity extends AppCompatActivity implements View.
         listView.refreshDrawableState();
         mSwipeRefreshLayout.setRefreshing(false);
     }
+
+
 }
